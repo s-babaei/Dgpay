@@ -39,8 +39,24 @@ public class Main{
             for (int i = 0; i < rowOfMatrixOne; i++) {
                 for (int j = 0; j < columnOfMatrixTwo; j++) {
                     for (int k = 0; k < rowOfMatrixTwo; k++) {
+                        ThreadImplMul threadImplMul = new ThreadImplMul(matrixOne[i][k] , matrixTwo[k][j]);
+                        threadImplMul.start();
+                        try {
+                            threadImplMul.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        ThreadImplSum threadImplSum = new ThreadImplSum(threadImplMul.getMultiplication(),sum);
+                        threadImplSum.start();
 
-                        sum = sum + (matrixOne[i][k] * matrixTwo[k][j]);
+
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        sum=threadImplSum.getSum();
+
                     }
                     result[i][j] = sum;
                     sum = 0;
